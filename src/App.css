@@ -1,0 +1,36 @@
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff8f8;
+}
+
+.navbar {
+  width: 100%;
+  min-height: 75px;
+  box-sizing: border-box;
+  padding: 16px 35px;
+  background-color: #c8102e;
+  color: white;
+  border-bottom: 3px solid #8f0b21;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: clamp(18px, 2.2vw, 26px);
+}
+
+.navbar p {
+  margin: 0;
+  font-size: 14px;
+  white-space: nowrap;
+}
