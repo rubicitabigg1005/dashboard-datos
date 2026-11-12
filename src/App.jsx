@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './componentes/navbar';
 import TarjetaMetrica from './components/TarjetaMetrica';
 import TablaDatos from './components/TablaDatos';
+import PanelAnalitico from './components/PanelAnalitico';
 
 import {
   obtenerDatosVisualizacion,
@@ -71,6 +72,8 @@ function App() {
         </section>
 
         <TablaDatos datos={datos} />
+
+        <PanelAnalitico />
       </main>
     </div>
   );

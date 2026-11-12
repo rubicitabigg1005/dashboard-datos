@@ -1,5 +1,6 @@
 
 import dataset from '../data/dataset.json';
+import apiClient from './apiClient';
 
 // Función asíncrona para obtener los datos simulando una petición HTTP
 export async function obtenerDatosVisualizacion() {
@@ -38,4 +39,18 @@ export function procesarDatos(datos) {
       valorPromedio
     }
   };
+}
+
+// Obtener información meteorológica desde Open-Meteo
+export async function obtenerPrediccion() {
+  const respuesta = await apiClient.get('/forecast', {
+    params: {
+      latitude: 19.4326,
+      longitude: -99.1332,
+      current: 'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m',
+      timezone: 'America/Mexico_City'
+    }
+  });
+
+  return respuesta.data.current;
 }
