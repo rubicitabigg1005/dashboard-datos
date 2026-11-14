@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from 'react';
 
-import Navbar from './componentes/navbar';
+import DashboardLayout from './components/DashboardLayout';
 import TarjetaMetrica from './components/TarjetaMetrica';
 import TablaDatos from './components/TablaDatos';
-import PanelAnalitico from './components/PanelAnalitico';
+import GraficoDatos from './components/GraficoDatos';
 
 import {
   obtenerDatosVisualizacion,
@@ -14,22 +14,27 @@ import {
 import './App.css';
 
 function App() {
+  const [datosOriginales, setDatosOriginales] = useState([]);
   const [datos, setDatos] = useState([]);
   const [metricas, setMetricas] = useState(null);
+
+  const [filtros, setFiltros] = useState({
+    categoria: 'todas',
+    fecha: ''
+  });
+
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
 
+  // Cargar los datos iniciales
   useEffect(() => {
     async function cargarDatos() {
       try {
         const resultado = await obtenerDatosVisualizacion();
-        const datosProcesados = procesarDatos(resultado);
-
-        setDatos(datosProcesados.filas);
-        setMetricas(datosProcesados.metricas);
-      } catch (error) {
+        setDatosOriginales(resultado);
+      } catch (err) {
+        console.error(err);
         setError('No fue posible cargar los datos.');
-        console.error(error);
       } finally {
         setCargando(false);
       }
@@ -37,6 +42,28 @@ function App() {
 
     cargarDatos();
   }, []);
+
+  // Aplicar filtros y actualizar las visualizaciones
+  useEffect(() => {
+    let filtrados = [...datosOriginales];
+
+    if (filtros.categoria !== 'todas') {
+      filtrados = filtrados.filter(
+        (item) => item.categoria === filtros.categoria
+      );
+    }
+
+    if (filtros.fecha) {
+      filtrados = filtrados.filter(
+        (item) => item.fecha === filtros.fecha
+      );
+    }
+
+    const resultado = procesarDatos(filtrados);
+
+    setDatos(resultado.filas);
+    setMetricas(resultado.metricas);
+  }, [filtros, datosOriginales]);
 
   if (cargando) {
     return <p>Cargando información...</p>;
@@ -47,13 +74,11 @@ function App() {
   }
 
   return (
-    <div>
-      <Navbar />
-
-      <main className="dashboard">
-        <h2>Panel de Ciencia de Datos</h2>
-        <p>Resumen de información del dataset</p>
-
+    <DashboardLayout
+      filtros={filtros}
+      setFiltros={setFiltros}
+    >
+      {metricas && (
         <section className="metricas">
           <TarjetaMetrica
             titulo="Total de productos"
@@ -70,12 +95,12 @@ function App() {
             valor={`$${metricas.valorPromedio.toFixed(2)}`}
           />
         </section>
+      )}
 
-        <TablaDatos datos={datos} />
+      <GraficoDatos datos={datos} />
 
-        <PanelAnalitico />
-      </main>
-    </div>
+      <TablaDatos datos={datos} />
+    </DashboardLayout>
   );
 }
 
