@@ -8,7 +8,8 @@ import GraficoDatos from './components/GraficoDatos';
 
 import {
   obtenerDatosVisualizacion,
-  procesarDatos
+  procesarDatos,
+  formatearParaGrafico
 } from './services/dataService';
 
 import './App.css';
@@ -43,7 +44,7 @@ function App() {
     cargarDatos();
   }, []);
 
-  // Aplicar filtros y actualizar las visualizaciones
+  // Aplicar filtros
   useEffect(() => {
     let filtrados = [...datosOriginales];
 
@@ -65,6 +66,9 @@ function App() {
     setMetricas(resultado.metricas);
   }, [filtros, datosOriginales]);
 
+  // Preparar los datos para Chart.js
+  const datosGrafico = formatearParaGrafico(datos);
+
   if (cargando) {
     return <p>Cargando información...</p>;
   }
@@ -77,6 +81,7 @@ function App() {
     <DashboardLayout
       filtros={filtros}
       setFiltros={setFiltros}
+      datosGrafico={datosGrafico}
     >
       {metricas && (
         <section className="metricas">

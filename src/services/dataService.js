@@ -54,3 +54,39 @@ export async function obtenerPrediccion() {
 
   return respuesta.data.current;
 }
+
+
+// Preparar los datos para las gráficas de Chart.js
+export function formatearParaGrafico(datosCrudos = []) {
+  if (!Array.isArray(datosCrudos) || datosCrudos.length === 0) {
+    return {
+      tendencia: {
+        labels: [],
+        values: []
+      },
+      comparativo: {
+        labels: [],
+        values: []
+      }
+    };
+  }
+
+  const datosValidos = datosCrudos.filter(
+    (item) =>
+      item.producto &&
+      item.fecha &&
+      Number.isFinite(Number(item.cantidad))
+  );
+
+  return {
+    tendencia: {
+      labels: datosValidos.map((item) => item.fecha),
+      values: datosValidos.map((item) => Number(item.cantidad))
+    },
+
+    comparativo: {
+      labels: datosValidos.map((item) => item.producto),
+      values: datosValidos.map((item) => Number(item.cantidad))
+    }
+  };
+}

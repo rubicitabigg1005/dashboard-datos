@@ -1,0 +1,77 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.DiGraph()
+
+G.add_node("Perro")
+
+G.add_edge("Perro", "Animal", label="puede ser")
+G.add_edge("Animal", "Organismo", label="puede ser")
+G.add_edge("Perro", "Mascota", label="se usa")
+
+funciones = [
+    "Guardián",
+    "Cazar",
+    "Compañía",
+    "Asistencia",
+    "Terapia",
+    "Policía",
+    "Guardia"
+]
+
+for funcion in funciones:
+    G.add_edge("Perro", funcion, label="se utiliza para")
+
+pos = {
+    "Perro": (0, 0),
+    "Organismo": (-0.5, 2),
+    "Animal": (-2.5, 0.5),
+    "Mascota": (-1.5, -1.5),
+    "Guardián": (2.5, 1),
+    "Cazar": (2.5, 0.5),
+    "Compañía": (2.5, 0),
+    "Asistencia": (2.5, -0.5),
+    "Terapia": (2.5, -1),
+    "Policía": (2.5, -1.5),
+    "Guardia": (2.5, -2)
+}
+
+plt.figure(figsize=(13, 9))
+
+nx.draw_networkx_nodes(
+    G, pos,
+    node_size=3000,
+    node_color="skyblue",
+    edgecolors="black"
+)
+
+nx.draw_networkx_labels(
+    G, pos,
+    font_size=10,
+    font_weight="bold"
+)
+
+nx.draw_networkx_edges(
+    G, pos,
+    arrows=True,
+    arrowsize=18,
+    edge_color="gray",
+    width=1.5,
+    connectionstyle="arc3,rad=0.05"
+)
+
+edge_labels = nx.get_edge_attributes(G, "label")
+
+nx.draw_networkx_edge_labels(
+    G, pos,
+    edge_labels=edge_labels,
+    font_size=8,
+    font_color="darkred",
+    label_pos=0.5,
+    rotate=False
+)
+
+plt.title("Red Semántica", fontsize=16, fontweight="bold")
+plt.axis("off")
+plt.tight_layout()
+plt.show()
